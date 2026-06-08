@@ -1,0 +1,166 @@
+/* 遮罩专属深色 token + 布局（移植自 Prototype/desktop-reminder.html） */
+:root {
+  --mask-ink: #ffffff;
+  --mask-dim: rgba(255, 255, 255, 0.62);
+  --mask-faint: rgba(255, 255, 255, 0.34);
+  --mask-veil: rgba(10, 11, 14, 0.86);
+  --mask-line: rgba(255, 255, 255, 0.14);
+  --wall-a: #1f3a5f;
+  --wall-b: #142033;
+  --wall-c: #0c0f16;
+  --btn-ink: #15171c;
+}
+
+body.mask-body {
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.mask {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: var(--mask-veil);
+  backdrop-filter: blur(3px);
+  color: var(--mask-ink);
+  display: grid;
+  place-items: center;
+  animation: fadein 0.35s var(--ease);
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+}
+.mask.bg-wallpaper {
+  background-size: cover;
+  background-position: center;
+}
+
+.mask-inner {
+  text-align: center;
+  max-width: 640px;
+  padding: 0 40px;
+}
+.pill-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 34px;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--mask-line);
+  font-size: 13px;
+  color: var(--mask-dim);
+  letter-spacing: 0.02em;
+}
+.pill-trigger .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 70%);
+}
+.mask h1 {
+  font-size: clamp(40px, 6vw, 68px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+.mask .desc {
+  font-size: clamp(18px, 2.2vw, 23px);
+  color: var(--mask-dim);
+  line-height: 1.55;
+  margin-bottom: 30px;
+  max-width: 30ch;
+  margin-inline: auto;
+}
+.mask .clock {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  color: var(--mask-faint);
+  letter-spacing: 0.04em;
+  margin-bottom: 42px;
+}
+.mask .btn-know {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 40px;
+  border-radius: var(--radius-pill);
+  background: var(--mask-ink);
+  color: var(--btn-ink);
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition:
+    transform var(--motion-fast) var(--ease),
+    box-shadow var(--motion-fast) var(--ease);
+}
+.mask .btn-know:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.mask .btn-snooze {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 14px;
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--mask-dim);
+  border: 1px solid var(--mask-line);
+  font-size: 15px;
+  font-weight: 500;
+}
+.mask .btn-snooze:hover {
+  color: var(--mask-ink);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.countbar-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  padding: 26px 48px 30px;
+}
+.countbar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+.countbar {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+.countbar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 1s linear;
+}
+.count-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  color: var(--mask-dim);
+  min-width: 42px;
+  text-align: right;
+}
+.count-lbl {
+  font-size: 13px;
+  color: var(--mask-faint);
+}
