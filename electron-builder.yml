@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: scaffold-tmp
+appId: com.local.taskreminder
+productName: 任务提醒
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: scaffold-tmp
+  executableName: task-reminder
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
