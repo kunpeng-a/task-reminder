@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>任务列表 · 任务提醒</title>
+<link rel="stylesheet" href="css/app.css" />
+<style>
+  body { display: grid; place-items: center; min-height: 100vh; }
+</style>
+</head>
+<body>
+<div class="app-window" data-od-id="window">
+  <div class="titlebar">
+    <div class="traffic"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <span class="title">任务提醒 — Task Reminder</span>
+    <div class="win-ctl"><span>—</span><span>▢</span><span>✕</span></div>
+  </div>
+
+  <div class="app-body">
+    <!-- 侧栏 -->
+    <aside class="sidebar" data-od-id="sidebar">
+      <div class="brand">
+        <div class="mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg>
+        </div>
+        <div><b>任务提醒</b><small>本地 · 后台常驻</small></div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" href="desktop-tasks.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          全部任务 <span class="count">7</span>
+        </a>
+        <a class="nav-item" href="desktop-edit.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新建任务
+        </a>
+        <a class="nav-item" href="desktop-reminder.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          提醒预览
+        </a>
+        <a class="nav-item" href="desktop-settings.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          全局设置
+        </a>
+      </nav>
+
+      <div class="spacer"></div>
+      <div class="side-status">
+        <span class="dot live"></span>
+        <div>调度运行中 · 6 个任务计时中</div>
+      </div>
+    </aside>
+
+    <!-- 主区 -->
+    <section class="main">
+      <header class="topbar">
+        <div>
+          <h1>全部任务</h1>
+          <div class="sub">按下次提醒时间排序 · 今天 周一 13:47</div>
+        </div>
+        <div class="grow"></div>
+        <button class="btn btn-secondary btn-sm" id="pauseAllBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          暂停全部
+        </button>
+        <a class="btn btn-primary" href="desktop-edit.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新建任务
+        </a>
+      </header>
+
+      <div class="content">
+        <div class="tabs" role="tablist" style="margin-bottom:18px;width:fit-content">
+          <button class="tab active" data-filter="all">全部 <span class="n">7</span></button>
+          <button class="tab" data-filter="enabled">启用中 <span class="n">5</span></button>
+          <button class="tab" data-filter="disabled">已禁用 <span class="n">1</span></button>
+          <button class="tab" data-filter="expired">已过期 <span class="n">1</span></button>
+        </div>
+
+        <div class="task-list" id="taskList">
+
+          <!-- 喝水 · 周期 -->
+          <article class="task" data-state="enabled" data-type="interval">
+            <div class="task-ico ico-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10l-1 5H8L7 2z"/><path d="M8 7c-1 4-2 8-2 10a6 6 0 0 0 12 0c0-2-1-6-2-10"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">喝水提醒</span>
+                <span class="badge badge-interval">每 20 分钟</span>
+                <span class="badge badge-live"><span class="dot" style="background:currentColor"></span>启用</span>
+              </div>
+              <div class="task-desc">起身接杯水，给眼睛和身体一点缓冲 💧（示例文案在遮罩中显示）</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>周期提醒 · 间隔 20 分钟</span>
+                <span class="k">遮罩 30s 自动关闭</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown"><div class="big num" data-countdown="752">12:32</div><div class="lbl">距下次提醒</div></div>
+              <label class="switch"><input type="checkbox" checked /><span class="track"></span></label>
+            </div>
+          </article>
+
+          <!-- 久坐 · 周期 -->
+          <article class="task" data-state="enabled" data-type="interval">
+            <div class="task-ico ico-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v6l-3 7M12 13l3 7M7 11h10"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">久坐提醒</span>
+                <span class="badge badge-interval">每 45 分钟</span>
+                <span class="badge badge-live"><span class="dot" style="background:currentColor"></span>启用</span>
+              </div>
+              <div class="task-desc">站起来活动 1 分钟，伸展肩颈、远眺窗外</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>周期提醒 · 间隔 45 分钟</span>
+                <span class="k">遮罩一直显示 · 需手动关闭</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown"><div class="big num" data-countdown="1985">33:05</div><div class="lbl">距下次提醒</div></div>
+              <label class="switch"><input type="checkbox" checked /><span class="track"></span></label>
+            </div>
+          </article>
+
+          <!-- 服药 · 每日 -->
+          <article class="task" data-state="enabled" data-type="daily">
+            <div class="task-ico ico-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><path d="m8.5 8.5 7 7"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">服药提醒</span>
+                <span class="badge badge-daily">每日 08:00 · 20:00</span>
+                <span class="badge badge-live"><span class="dot" style="background:currentColor"></span>启用</span>
+              </div>
+              <div class="task-desc">饭后服用，记得配温水。漏服请尽快补上</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>每日提醒 · 2 个时间点</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown"><div class="big num">20:00</div><div class="lbl">今天下一次</div></div>
+              <label class="switch"><input type="checkbox" checked /><span class="track"></span></label>
+            </div>
+          </article>
+
+          <!-- 周会 · 定时 -->
+          <article class="task" data-state="enabled" data-type="scheduled">
+            <div class="task-ico ico-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">项目周会</span>
+                <span class="badge badge-scheduled">定时 06-10 09:00</span>
+                <span class="badge badge-live"><span class="dot" style="background:currentColor"></span>启用</span>
+              </div>
+              <div class="task-desc">周会·腾讯会议 832 4471 · 同步本周进度与下周排期</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>定时提醒 · 一次性</span>
+                <span class="k">触发后标记为已过期</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown"><div class="big num">2 天</div><div class="lbl">06-10 周三</div></div>
+              <label class="switch"><input type="checkbox" checked /><span class="track"></span></label>
+            </div>
+          </article>
+
+          <!-- 站会 · 每日 -->
+          <article class="task" data-state="enabled" data-type="daily">
+            <div class="task-ico ico-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">每日站会打卡</span>
+                <span class="badge badge-daily">每日 09:30</span>
+                <span class="badge badge-live"><span class="dot" style="background:currentColor"></span>启用</span>
+              </div>
+              <div class="task-desc">在群里同步昨日完成 / 今日计划 / 阻塞项</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>每日提醒 · 1 个时间点</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown"><div class="big num">明 09:30</div><div class="lbl">今日已完成</div></div>
+              <label class="switch"><input type="checkbox" checked /><span class="track"></span></label>
+            </div>
+          </article>
+
+          <!-- 护眼 · 禁用 -->
+          <article class="task is-disabled" data-state="disabled" data-type="interval">
+            <div class="task-ico ico-gray">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">午间护眼远眺</span>
+                <span class="badge badge-interval">每 30 分钟</span>
+                <span class="badge badge-paused"><span class="dot" style="background:currentColor"></span>已禁用</span>
+              </div>
+              <div class="task-desc">看向 6 米外的物体 20 秒，缓解视疲劳</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>周期提醒 · 已暂停计时</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown expired"><div class="big num">—</div><div class="lbl">未在计时</div></div>
+              <label class="switch"><input type="checkbox" /><span class="track"></span></label>
+            </div>
+          </article>
+
+          <!-- 取快递 · 已过期 -->
+          <article class="task is-expired" data-state="expired" data-type="scheduled">
+            <div class="task-ico ico-gray">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.5 4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.27 6.96 8.73 5.05 8.73-5.05M12 22.08V12"/></svg>
+            </div>
+            <div class="task-main">
+              <div class="task-title-row">
+                <span class="task-title">驿站取快递</span>
+                <span class="badge badge-scheduled">定时 06-07 18:30</span>
+                <span class="badge badge-expired"><span class="dot" style="background:currentColor"></span>已过期</span>
+              </div>
+              <div class="task-desc">3 件待取 · 丰巢柜 12-3306，今晚 21:00 前</div>
+              <div class="task-meta">
+                <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>定时提醒 · 已触发</span>
+              </div>
+            </div>
+            <div class="task-right">
+              <div class="countdown expired"><div class="big num">已结束</div><div class="lbl">昨天 18:30</div></div>
+              <button class="btn btn-ghost btn-sm">重新启用</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // 筛选
+  const tabs = document.querySelectorAll('.tab');
+  const tasks = document.querySelectorAll('#taskList .task');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const f = t.dataset.filter;
+    tasks.forEach(task => {
+      task.style.display = (f === 'all' || task.dataset.state === f) ? '' : 'none';
+    });
+  }));
+
+  // 启用/禁用：切换行外观
+  document.querySelectorAll('.task .switch input').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const row = inp.closest('.task');
+      row.classList.toggle('is-disabled', !inp.checked);
+      const badge = row.querySelector('.badge-live, .badge-paused');
+      if (badge) {
+        badge.classList.toggle('badge-live', inp.checked);
+        badge.classList.toggle('badge-paused', !inp.checked);
+        badge.lastChild.textContent = inp.checked ? '启用' : '已禁用';
+      }
+    });
+  });
+
+  // 实时倒计时（周期任务）
+  function tick() {
+    document.querySelectorAll('[data-countdown]').forEach(el => {
+      let s = parseInt(el.dataset.countdown, 10);
+      const row = el.closest('.task');
+      if (row && row.classList.contains('is-disabled')) return;
+      s = s <= 0 ? 0 : s - 1;
+      el.dataset.countdown = s;
+      const m = String(Math.floor(s / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      el.textContent = m + ':' + ss;
+    });
+  }
+  setInterval(tick, 1000);
+
+  // 暂停全部
+  const pauseBtn = document.getElementById('pauseAllBtn');
+  let paused = false;
+  pauseBtn.addEventListener('click', () => {
+    paused = !paused;
+    document.querySelectorAll('.task[data-state="enabled"] .switch input').forEach(i => {
+      i.checked = !paused; i.dispatchEvent(new Event('change'));
+    });
+    pauseBtn.innerHTML = paused
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>恢复全部'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>暂停全部';
+  });
+</script>
+</body>
+</html>

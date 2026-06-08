@@ -1,0 +1,105 @@
+/* ============================================================================
+   Task Reminder · 手机端共享样式（iPhone 框 + 移动端组件）
+   依赖 app.css 的 token
+   ============================================================================ */
+
+body.phone-stage {
+  display: grid; place-items: center; min-height: 100vh;
+  background: radial-gradient(1000px 700px at 50% 0%, color-mix(in oklab, var(--accent), transparent 92%), var(--bg));
+  padding: 28px 0;
+}
+
+/* iPhone 15 设备框 390×844 */
+.phone {
+  width: 390px; height: 844px; position: relative; flex: none;
+  background: var(--surface);
+  border-radius: 54px;
+  border: 11px solid var(--frame);
+  box-shadow: 0 40px 90px color-mix(in oklab, var(--fg), transparent 72%), 0 0 0 1px rgba(0,0,0,.4) inset;
+  overflow: hidden;
+}
+.phone-screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); overflow: hidden; }
+
+/* 状态栏 + 灵动岛 */
+.statusbar {
+  height: 54px; flex: none; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 28px 6px; position: relative; z-index: 5;
+  font-size: 14px; font-weight: 600; color: var(--fg);
+}
+.statusbar.on-dark { color: var(--on-dark); }
+.statusbar .sb-time { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.statusbar .sb-right { display: flex; align-items: center; gap: 6px; }
+.statusbar .sb-right svg { width: 17px; height: 12px; }
+.dynamic-island {
+  position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+  width: 122px; height: 35px; background: var(--island); border-radius: 20px; z-index: 6;
+}
+
+/* 头部 */
+.m-header { padding: 8px 20px 14px; flex: none; }
+.m-header .row1 { display: flex; align-items: center; justify-content: space-between; }
+.m-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+.m-header .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.m-iconbtn { width: 38px; height: 38px; border-radius: var(--radius-pill); display: grid; place-items: center; background: var(--surface); border: 1px solid var(--border); color: var(--fg); }
+.m-iconbtn svg { width: 19px; height: 19px; }
+.m-add { width: 40px; height: 40px; border-radius: var(--radius-pill); background: var(--accent); color: var(--on-accent); border: none; display: grid; place-items: center; }
+.m-add svg { width: 21px; height: 21px; }
+
+/* 概览统计条 */
+.m-stats { display: flex; gap: 10px; padding: 0 20px 14px; flex: none; }
+.m-stat { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; }
+.m-stat .v { font-size: 22px; font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.m-stat .v.accent { color: var(--accent); }
+.m-stat .l { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* 移动端筛选 chips */
+.m-chips { display: flex; gap: 8px; padding: 0 20px 10px; flex: none; overflow-x: auto; }
+.m-chip { flex: none; padding: 7px 14px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 500; background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+.m-chip.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+/* 列表滚动区 */
+.m-scroll { flex: 1; overflow-y: auto; padding: 4px 20px 16px; min-height: 0; }
+.m-scroll::-webkit-scrollbar { width: 0; }
+
+/* 移动端任务卡 */
+.m-task { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 11px; }
+.m-task.is-disabled { opacity: .6; }
+.m-task .t-top { display: flex; align-items: flex-start; gap: 12px; }
+.m-task .t-ico { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.m-task .t-ico svg { width: 20px; height: 20px; }
+.m-task .t-body { flex: 1; min-width: 0; }
+.m-task .t-name { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.m-task .t-desc { font-size: 13px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-task .t-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.m-task .t-next { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.m-task .t-next b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--fg); font-weight: 600; }
+.m-task .t-next svg { width: 14px; height: 14px; opacity: .6; }
+
+/* 底部 tab 栏 */
+.m-tabbar {
+  flex: none; display: grid; grid-template-columns: repeat(4, 1fr);
+  padding: 8px 12px 26px; background: color-mix(in oklab, var(--surface), transparent 8%);
+  backdrop-filter: blur(20px); border-top: 1px solid var(--border);
+}
+.m-tab { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 0; color: var(--meta); font-size: 10px; font-weight: 500; background: none; border: none; min-height: 44px; }
+.m-tab svg { width: 23px; height: 23px; }
+.m-tab.active { color: var(--accent); }
+
+/* home indicator */
+.home-ind { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: var(--fg); opacity: .85; z-index: 7; }
+.home-ind.on-dark { background: var(--on-dark); }
+
+/* 设置分组 */
+.m-group { margin: 0 20px 18px; }
+.m-group .g-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 8px 4px; }
+.m-group .g-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.m-row { display: flex; align-items: center; gap: 13px; padding: 13px 15px; border-bottom: 1px solid var(--border-soft); min-height: 44px; }
+.m-row:last-child { border-bottom: none; }
+.m-row .r-ico { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; background: var(--surface-2); color: var(--muted); }
+.m-row .r-ico svg { width: 17px; height: 17px; }
+.m-row .r-main { flex: 1; min-width: 0; }
+.m-row .r-main b { font-size: 15px; font-weight: 500; display: block; }
+.m-row .r-main span { font-size: 12px; color: var(--muted); }
+.m-row .r-val { font-size: 14px; color: var(--muted); font-family: var(--font-mono); }
+.m-row .chev { color: var(--meta); }
+.m-row .chev svg { width: 18px; height: 18px; }

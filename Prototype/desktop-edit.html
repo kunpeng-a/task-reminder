@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>新建任务 · 任务提醒</title>
+<link rel="stylesheet" href="css/app.css" />
+<style>
+  body { display: grid; place-items: center; min-height: 100vh; }
+  .edit-wrap { max-width: 720px; margin-inline: auto; }
+  .form-grid { display: flex; flex-direction: column; gap: 22px; }
+  .param-block { display: none; }
+  .param-block.active { display: block; animation: fade .2s var(--ease); }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .footer-bar {
+    position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px;
+    padding: 16px 24px; border-top: 1px solid var(--border); background: var(--surface);
+  }
+</style>
+</head>
+<body>
+<div class="app-window" data-od-id="window">
+  <div class="titlebar">
+    <div class="traffic"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <span class="title">任务提醒 — 新建任务</span>
+    <div class="win-ctl"><span>—</span><span>▢</span><span>✕</span></div>
+  </div>
+
+  <div class="app-body">
+    <aside class="sidebar" data-od-id="sidebar">
+      <div class="brand">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg></div>
+        <div><b>任务提醒</b><small>本地 · 后台常驻</small></div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item" href="desktop-tasks.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>全部任务 <span class="count">7</span></a>
+        <a class="nav-item active" href="desktop-edit.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新建任务</a>
+        <a class="nav-item" href="desktop-reminder.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>提醒预览</a>
+        <a class="nav-item" href="desktop-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>全局设置</a>
+      </nav>
+      <div class="spacer"></div>
+      <div class="side-status"><span class="dot live"></span><div>调度运行中 · 6 个任务计时中</div></div>
+    </aside>
+
+    <section class="main">
+      <header class="topbar">
+        <a class="btn btn-ghost btn-icon" href="desktop-tasks.html" title="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></a>
+        <div><h1>新建任务</h1><div class="sub">3 步内完成 · 保存后立即生效</div></div>
+      </header>
+
+      <div class="content">
+        <div class="edit-wrap form-grid">
+
+          <div class="two">
+            <div class="field">
+              <label>任务名称 <span class="req">*</span></label>
+              <input class="input" type="text" value="喝水提醒" placeholder="例如：喝水提醒" />
+            </div>
+            <div class="field">
+              <label>提醒音效</label>
+              <select class="select">
+                <option>清脆叮咚（默认）</option>
+                <option>水滴</option>
+                <option>木鱼</option>
+                <option>静音</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>提醒内容 <span class="hint" style="font-weight:400">（遮罩中显示的详细描述，选填）</span></label>
+            <textarea class="textarea" placeholder="提醒触发时显示在全屏遮罩上的文字…">起身接杯水，给眼睛和身体一点缓冲 💧</textarea>
+          </div>
+
+          <!-- 提醒类型 -->
+          <div class="field">
+            <label>提醒类型 <span class="req">*</span></label>
+            <div class="seg" id="typeSeg">
+              <div class="seg-opt active" data-type="interval">
+                <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+                <b>周期提醒</b><span>每隔固定分钟重复</span>
+              </div>
+              <div class="seg-opt" data-type="scheduled">
+                <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+                <b>定时提醒</b><span>指定日期时间一次</span>
+              </div>
+              <div class="seg-opt" data-type="daily">
+                <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><path d="M12 8v4l2 1"/></svg></div>
+                <b>每日提醒</b><span>每天固定时间点</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 周期参数 -->
+          <div class="param-block active" data-block="interval">
+            <div class="card">
+              <div class="card-title">周期配置</div>
+              <div class="row-field" style="border:none;padding-top:0">
+                <div class="rf-main"><b>提醒间隔</b><span>应用启动后立即开始计时</span></div>
+                <div class="row" style="display:flex;align-items:center;gap:10px">
+                  <div class="stepper"><button type="button">−</button><input class="num" value="20" /><button type="button">+</button></div>
+                  <span class="hint">分钟</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 定时参数 -->
+          <div class="param-block" data-block="scheduled">
+            <div class="card">
+              <div class="card-title">定时配置</div>
+              <div class="two">
+                <div class="field"><label>提醒日期</label><input class="input" type="date" value="2026-06-10" /></div>
+                <div class="field"><label>提醒时间</label><input class="input" type="time" value="09:00" /></div>
+              </div>
+              <p class="hint" style="margin-top:12px">触发后该任务将自动标记为「已过期」，不再重复。</p>
+            </div>
+          </div>
+
+          <!-- 每日参数 -->
+          <div class="param-block" data-block="daily">
+            <div class="card">
+              <div class="card-title">每日时间点</div>
+              <div class="row" style="flex-wrap:wrap;gap:10px" id="timeChips">
+                <span class="chip-time">08:00 <button type="button" aria-label="删除">✕</button></span>
+                <span class="chip-time">20:00 <button type="button" aria-label="删除">✕</button></span>
+              </div>
+              <div class="row" style="margin-top:14px;gap:10px">
+                <input class="input" type="time" value="12:30" style="width:140px" id="newTime" />
+                <button class="btn btn-secondary btn-sm" type="button" id="addTime">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>添加时间点
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 遮罩配置 -->
+          <div class="card">
+            <div class="card-title">遮罩显示配置 · 留空则用全局默认</div>
+            <div class="row-field">
+              <div class="rf-main"><b>倒计时时长</b><span>进度条从满到空的秒数</span></div>
+              <div class="stepper"><button type="button">−</button><input class="num" value="30" /><button type="button">+</button></div>
+            </div>
+            <div class="row-field" id="autoCloseRow">
+              <div class="rf-main"><b>倒计时结束自动关闭</b><span>关闭后无需手动点击「知道了」</span></div>
+              <label class="switch"><input type="checkbox" checked id="autoClose" /><span class="track"></span></label>
+            </div>
+            <div class="row-field">
+              <div class="rf-main"><b>一直显示模式</b><span>开启后隐藏进度条，必须手动关闭</span></div>
+              <label class="switch"><input type="checkbox" id="alwaysShow" /><span class="track"></span></label>
+            </div>
+            <div class="row-field">
+              <div class="rf-main"><b>自定义背景壁纸</b><span>覆盖全局默认遮罩背景</span></div>
+              <button class="btn btn-secondary btn-sm" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>选择图片…</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="footer-bar">
+        <label class="switch"><input type="checkbox" checked /><span class="track"></span></label>
+        <span class="hint">创建后立即启用</span>
+        <div style="flex:1"></div>
+        <a class="btn btn-ghost" href="desktop-tasks.html">取消</a>
+        <a class="btn btn-primary" href="desktop-tasks.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>保存任务
+        </a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // 类型切换 → 显示对应参数块
+  const seg = document.getElementById('typeSeg');
+  const blocks = document.querySelectorAll('.param-block');
+  seg.querySelectorAll('.seg-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      seg.querySelectorAll('.seg-opt').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      blocks.forEach(b => b.classList.toggle('active', b.dataset.block === opt.dataset.type));
+    });
+  });
+
+  // 步进器
+  document.querySelectorAll('.stepper').forEach(st => {
+    const input = st.querySelector('input');
+    const [minus, plus] = st.querySelectorAll('button');
+    minus.addEventListener('click', () => input.value = Math.max(1, (+input.value || 1) - 1));
+    plus.addEventListener('click', () => input.value = (+input.value || 0) + 1);
+  });
+
+  // 每日时间点：添加 / 删除
+  const chips = document.getElementById('timeChips');
+  document.getElementById('addTime').addEventListener('click', () => {
+    const v = document.getElementById('newTime').value;
+    if (!v) return;
+    const chip = document.createElement('span');
+    chip.className = 'chip-time';
+    chip.innerHTML = v + ' <button type="button" aria-label="删除">✕</button>';
+    chips.appendChild(chip);
+  });
+  chips.addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON') e.target.closest('.chip-time').remove();
+  });
+
+  // 「一直显示」与「自动关闭」互斥
+  const always = document.getElementById('alwaysShow');
+  const auto = document.getElementById('autoClose');
+  const autoRow = document.getElementById('autoCloseRow');
+  always.addEventListener('change', () => {
+    autoRow.style.opacity = always.checked ? '.45' : '1';
+    auto.disabled = always.checked;
+    if (always.checked) auto.checked = false;
+  });
+</script>
+</body>
+</html>

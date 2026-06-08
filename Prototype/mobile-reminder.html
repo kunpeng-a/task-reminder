@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>全屏提醒（移动端）· 任务提醒</title>
+<link rel="stylesheet" href="css/app.css" />
+<link rel="stylesheet" href="css/mobile.css" />
+<style>
+  :root { --mk-ink:#fff; --mk-dim:rgba(255,255,255,.62); --mk-faint:rgba(255,255,255,.34); --mk-line:rgba(255,255,255,.14); --wall-a:#1f3a5f; --wall-b:#142033; --wall-c:#0c0f16; --btn-ink:#15171c; }
+  .m-mask {
+    position: absolute; inset: 0; z-index: 10;
+    background:
+      linear-gradient(rgba(8,9,12,.80), rgba(8,9,12,.88)),
+      radial-gradient(700px 500px at 30% 18%, var(--wall-a), transparent),
+      linear-gradient(160deg, var(--wall-b), var(--wall-c));
+    color: var(--mk-ink); display: flex; flex-direction: column;
+    animation: mfade .35s var(--ease);
+  }
+  @keyframes mfade { from { opacity: 0; } }
+  .mk-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 34px; }
+  .mk-pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; border-radius: var(--radius-pill); background: rgba(255,255,255,.08); border: 1px solid var(--mk-line); font-size: 12px; color: var(--mk-dim); margin-bottom: 28px; }
+  .mk-pill .dot { width: 6px; height: 6px; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 70%); }
+  .mk-icon { width: 76px; height: 76px; border-radius: 24px; display: grid; place-items: center; background: rgba(255,255,255,.1); margin-bottom: 24px; }
+  .mk-icon svg { width: 38px; height: 38px; color: var(--mk-ink); }
+  .m-mask h1 { font-size: 38px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 14px; }
+  .m-mask .mk-desc { font-size: 17px; color: var(--mk-dim); line-height: 1.55; margin-bottom: 22px; }
+  .m-mask .mk-clock { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 15px; color: var(--mk-faint); letter-spacing: .03em; }
+
+  .mk-foot { flex: none; padding: 0 28px 40px; }
+  .mk-count { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .mk-count .bar { flex: 1; height: 6px; border-radius: 4px; background: rgba(255,255,255,.16); overflow: hidden; }
+  .mk-count .bar i { display: block; height: 100%; background: var(--accent); border-radius: 4px; transition: width 1s linear; }
+  .mk-count .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 14px; color: var(--mk-dim); min-width: 36px; text-align: right; }
+  .mk-btn { width: 100%; padding: 16px; border-radius: 16px; background: var(--mk-ink); color: var(--btn-ink); border: none; font-size: 16px; font-weight: 600; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 9px; }
+  .mk-btn:active { transform: scale(.985); }
+  .mk-snooze { width: 100%; padding: 13px; margin-top: 10px; border-radius: 16px; background: transparent; color: var(--mk-dim); border: 1px solid var(--mk-line); font-size: 15px; font-weight: 500; min-height: 44px; }
+  .demo-chip { position: absolute; top: 64px; right: 16px; z-index: 11; background: rgba(255,255,255,.12); color: var(--mk-ink); border: none; border-radius: var(--radius-pill); padding: 7px 13px; font-size: 12px; }
+  .m-back { position: absolute; top: 62px; left: 16px; z-index: 11; color: rgba(255,255,255,.7); font-size: 13px; }
+</style>
+</head>
+<body class="phone-stage">
+<div class="phone" data-od-id="phone">
+  <div class="dynamic-island"></div>
+  <div class="phone-screen">
+
+    <div class="statusbar on-dark">
+      <span class="sb-time">14:00</span>
+      <span class="sb-right">
+        <svg viewBox="0 0 24 14" fill="currentColor"><rect x="0" y="6" width="3" height="8" rx="1"/><rect x="5" y="4" width="3" height="10" rx="1"/><rect x="10" y="2" width="3" height="12" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg>
+        <svg viewBox="0 0 24 14" fill="currentColor"><path d="M12 3C8 3 5 5 3 7l9 7 9-7c-2-2-5-4-9-4z" opacity=".9"/></svg>
+        <svg viewBox="0 0 26 14" fill="none" stroke="currentColor" stroke-width="1"><rect x="1" y="2" width="20" height="10" rx="3"/><rect x="3" y="4" width="15" height="6" rx="1.5" fill="currentColor"/><path d="M23 5v4" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+    </div>
+
+    <a class="m-back" href="mobile-tasks.html">‹ 列表</a>
+    <button class="demo-chip" id="restart">重新触发</button>
+
+    <section class="m-mask" id="mask">
+      <div class="mk-body">
+        <span class="mk-pill"><span class="dot"></span>周期提醒已触发 · 每 20 分钟</span>
+        <div class="mk-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10l-1 5H8L7 2z"/><path d="M8 7c-1 4-2 8-2 10a6 6 0 0 0 12 0c0-2-1-6-2-10"/></svg></div>
+        <h1>喝水提醒</h1>
+        <p class="mk-desc">起身接杯水，给眼睛和身体一点缓冲 💧</p>
+        <div class="mk-clock" id="clock">2026年6月8日 周一 · 14:00:00</div>
+      </div>
+
+      <div class="mk-foot">
+        <div class="mk-count">
+          <div class="bar"><i id="bar" style="width:100%"></i></div>
+          <span class="num" id="num">30s</span>
+        </div>
+        <button class="mk-btn" id="know"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>知道了</button>
+        <button class="mk-snooze">稍后提醒 · 5 分钟</button>
+      </div>
+    </section>
+
+    <div class="home-ind on-dark"></div>
+  </div>
+</div>
+
+<script>
+  const TOTAL = 30; let remain = TOTAL, timer;
+  const bar = document.getElementById('bar'), num = document.getElementById('num');
+  const mask = document.getElementById('mask'), clockEl = document.getElementById('clock');
+  function clock() {
+    const d = new Date(), p = n => String(n).padStart(2,'0');
+    const w = ['日','一','二','三','四','五','六'][d.getDay()];
+    clockEl.textContent = `2026年6月8日 周${w} · ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  }
+  clock(); setInterval(clock, 1000);
+  function run() {
+    clearInterval(timer); remain = TOTAL; bar.style.width = '100%'; num.textContent = TOTAL + 's';
+    timer = setInterval(() => {
+      remain--; bar.style.width = (remain/TOTAL*100) + '%'; num.textContent = Math.max(remain,0) + 's';
+      if (remain <= 0) { clearInterval(timer); close(); }
+    }, 1000);
+  }
+  function close() { mask.style.transition = 'opacity .35s'; mask.style.opacity = '0'; setTimeout(() => mask.style.display = 'none', 360); }
+  document.getElementById('know').addEventListener('click', close);
+  document.getElementById('restart').addEventListener('click', () => { mask.style.display = 'flex'; mask.style.opacity = '1'; run(); });
+  run();
+</script>
+</body>
+</html>
