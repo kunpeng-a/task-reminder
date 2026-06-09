@@ -12,6 +12,7 @@ const api = {
   saveSettings: (s: AppSettings): Promise<void> => ipcRenderer.invoke(IPC.saveSettings, s),
   pauseAll: (): Promise<boolean> => ipcRenderer.invoke(IPC.pauseAll),
   isPaused: (): Promise<boolean> => ipcRenderer.invoke(IPC.isPaused),
+  getAppStart: (): Promise<number> => ipcRenderer.invoke(IPC.getAppStart),
   pickFile: (kind: 'image' | 'audio'): Promise<string | null> =>
     ipcRenderer.invoke(IPC.pickFile, kind),
   onTasksChanged: (cb: () => void): (() => void) => {

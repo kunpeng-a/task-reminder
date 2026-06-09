@@ -2,10 +2,15 @@ import React from 'react'
 import { api } from '../api'
 import type { MaskPayload } from '../../../shared/types'
 
+function localFileUrl(p: string): string {
+  // 本地绝对路径 → file:// URL，并对中文/空格做 encode，否则加载失败
+  return encodeURI(`file://${p.replace(/\\/g, '/')}`)
+}
+
 function soundUrl(soundFile: string): string | null {
   if (!soundFile) return null
   if (soundFile.startsWith('builtin:')) return `./sounds/${soundFile.slice('builtin:'.length)}`
-  return `file://${soundFile.replace(/\\/g, '/')}`
+  return localFileUrl(soundFile)
 }
 
 export function Mask(): React.JSX.Element | null {
@@ -49,7 +54,7 @@ export function Mask(): React.JSX.Element | null {
   const pct = p.countdownSeconds ? (remain / p.countdownSeconds) * 100 : 0
   const bg = p.backgroundImage
     ? {
-        backgroundImage: `linear-gradient(rgba(8,9,12,.74),rgba(8,9,12,.82)), url("file://${p.backgroundImage.replace(/\\/g, '/')}")`
+        backgroundImage: `linear-gradient(rgba(8,9,12,.74),rgba(8,9,12,.82)), url("${localFileUrl(p.backgroundImage)}")`
       }
     : undefined
 

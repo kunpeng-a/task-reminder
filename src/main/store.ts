@@ -22,22 +22,28 @@ export function saveTask(input: Partial<Task> & { name: string; type: Task['type
   if (input.id) {
     const idx = tasks.findIndex(t => t.id === input.id)
     if (idx >= 0) {
-      tasks[idx] = { ...tasks[idx], ...input, updatedAt: now } as Task
+      const prev = tasks[idx]
+      const merged = { ...prev, ...input, updatedAt: now } as Task
+      // 从「关」变「开」→ 重置计时锚点；启用但缺锚点也补一个
+      if (merged.enabled && (!prev.enabled || !merged.enabledAt)) merged.enabledAt = now
+      tasks[idx] = merged
       store.set('tasks', tasks)
       return tasks[idx]
     }
   }
+  const enabled = input.enabled ?? true
   const task: Task = {
     id: randomUUID(),
     name: input.name,
     description: input.description ?? '',
     type: input.type,
-    enabled: input.enabled ?? true,
+    enabled,
     intervalMinutes: input.intervalMinutes,
     scheduledTime: input.scheduledTime,
     dailyTimes: input.dailyTimes,
     soundFile: input.soundFile ?? null,
     mask: input.mask ?? { autoClose: null, countdownSeconds: null, backgroundImage: null },
+    enabledAt: enabled ? now : undefined,
     createdAt: now,
     updatedAt: now,
   }
@@ -58,7 +64,12 @@ export function setLastTriggered(id: string, iso: string): void {
 export function setEnabled(id: string, enabled: boolean): void {
   const tasks = store.get('tasks')
   const t = tasks.find(x => x.id === id)
-  if (t) { t.enabled = enabled; t.updatedAt = new Date().toISOString(); store.set('tasks', tasks) }
+  if (t) {
+    t.enabled = enabled
+    if (enabled) t.enabledAt = new Date().toISOString() // 启用即重置计时锚点
+    t.updatedAt = new Date().toISOString()
+    store.set('tasks', tasks)
+  }
 }
 
 export function getSettings(): AppSettings {

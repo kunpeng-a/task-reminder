@@ -28,7 +28,10 @@ export function computeNextTrigger(task: Task, after: number, appStart: number):
       if (!mins || mins <= 0) return null
       const step = mins * 60_000
       const lt = task.lastTriggeredAt ? Date.parse(task.lastTriggeredAt) : 0
-      const baseAnchor = lt >= appStart ? lt : appStart
+      const en = task.enabledAt ? Date.parse(task.enabledAt) : 0
+      // 锚点取三者最大：应用启动、启用时刻、上次触发。
+      // → 启用即从满间隔重新计时；跨重启也重置；触发后顺延。
+      const baseAnchor = Math.max(appStart, en, lt)
       const k = Math.max(0, Math.floor((after - baseAnchor) / step)) + 1
       return baseAnchor + k * step
     }
@@ -55,9 +58,12 @@ export function triggerDueAt(task: Task, now: number, appStart: number): number 
   const last = task.lastTriggeredAt ? Date.parse(task.lastTriggeredAt) : null
   switch (task.type) {
     case 'interval': {
-      const lt = last !== null && last >= appStart ? last : appStart
-      const nt = computeNextTrigger({ ...task, lastTriggeredAt: new Date(lt).toISOString() }, lt, appStart)
-      return nt !== null && nt <= now ? nt : null
+      const step = (task.intervalMinutes ?? 0) * 60_000
+      if (step <= 0) return null
+      const en = task.enabledAt ? Date.parse(task.enabledAt) : 0
+      const anchor = Math.max(appStart, en, last ?? 0)
+      const nt = anchor + step // 锚点后的第一个触发点
+      return nt <= now ? nt : null
     }
     case 'scheduled': {
       if (last !== null) return null

@@ -34,6 +34,11 @@ export function isPaused(): boolean {
   return paused
 }
 
+/** 本次进程的计时锚点（interval 以此为起点），供渲染层算正确的倒计时。 */
+export function getAppStart(): number {
+  return appStart
+}
+
 export function onResume(): void {
   catchUp()
 }

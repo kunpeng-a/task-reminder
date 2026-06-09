@@ -17,6 +17,7 @@ export interface Task {
   dailyTimes?: string[]            // 'HH:mm'
   soundFile?: string | null        // null 回退全局
   mask: MaskConfig
+  enabledAt?: string               // ISO，最近一次「启用」的时刻；interval 以此为计时锚点（关闭再开会重置）
   lastTriggeredAt?: string         // ISO，持久化
   createdAt: string
   updatedAt: string
@@ -52,6 +53,7 @@ export const IPC = {
   saveSettings: 'settings:save',
   pauseAll: 'scheduler:pauseAll',
   isPaused: 'scheduler:isPaused',
+  getAppStart: 'scheduler:appStart',
   pickFile: 'dialog:pickFile',
   maskShow: 'mask:show',
   tasksChanged: 'tasks:changed',

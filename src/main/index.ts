@@ -23,6 +23,7 @@ if (!gotLock) {
   app.whenReady().then(() => {
     electronApp.setAppUserModelId('com.local.taskreminder')
     registerIpc(() => mainWindow)
+    notification.setMainGetter(() => mainWindow)
     createMainWindow()
     createTray(showMainWindow)
     scheduler.start((task) => notification.enqueue(task))

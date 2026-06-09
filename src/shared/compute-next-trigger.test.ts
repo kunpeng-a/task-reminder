@@ -46,6 +46,23 @@ describe('computeNextTrigger', () => {
     const t = base({ enabled:false, type:'interval', intervalMinutes:5 })
     expect(computeNextTrigger(t, Date.now(), 0)).toBeNull()
   })
+  it('interval：启用时刻晚于启动 → 从启用时刻起算满间隔', () => {
+    const appStart = new Date(2026,5,8,9,0,0).getTime()       // 应用很早就启动
+    const enabledAt = new Date(2026,5,8,10,0,0)               // 10:00 才启用
+    const now = new Date(2026,5,8,10,0,30).getTime()           // 启用后 30 秒
+    const t = base({ type:'interval', intervalMinutes: 1, enabledAt: enabledAt.toISOString() })
+    // 锚点=max(9:00,10:00)=10:00 → 下次=10:01（剩 30s），而非锚定到 appStart
+    expect(computeNextTrigger(t, now, appStart)).toBe(new Date(2026,5,8,10,1,0).getTime())
+  })
+  it('interval：重新启用（enabledAt 更新）后重新从满间隔计时', () => {
+    const appStart = new Date(2026,5,8,9,0,0).getTime()
+    const reEnabled = new Date(2026,5,8,11,30,0)             // 11:30 重新启用
+    const now = new Date(2026,5,8,11,30,5).getTime()          // 重启用后 5 秒
+    const t = base({ type:'interval', intervalMinutes: 1,
+      enabledAt: reEnabled.toISOString(),
+      lastTriggeredAt: new Date(2026,5,8,10,0,0).toISOString() }) // 旧的触发记录应被忽略
+    expect(computeNextTrigger(t, now, appStart)).toBe(new Date(2026,5,8,11,31,0).getTime())
+  })
 })
 
 describe('triggerDueAt（含当天内 catch-up）', () => {

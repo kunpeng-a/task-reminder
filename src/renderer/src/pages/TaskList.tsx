@@ -22,6 +22,7 @@ export function TaskList(): React.JSX.Element {
   const [filter, setFilter] = React.useState<Filter>('all')
   const [paused, setPaused] = React.useState(false)
   const [now, setNow] = React.useState(Date.now())
+  const [appStart, setAppStart] = React.useState(Date.now())
 
   const reload = React.useCallback(() => {
     api.listTasks().then(setTasks)
@@ -29,6 +30,7 @@ export function TaskList(): React.JSX.Element {
   React.useEffect(() => {
     reload()
     api.isPaused().then(setPaused)
+    api.getAppStart().then(setAppStart)
   }, [reload])
   React.useEffect(() => api.onTasksChanged(reload), [reload])
   React.useEffect(() => {
@@ -46,11 +48,13 @@ export function TaskList(): React.JSX.Element {
     .filter((t) => (filter === 'all' ? true : statusOf(t) === filter))
     .sort(
       (a, b) =>
-        (computeNextTrigger(a, now, now) ?? Infinity) - (computeNextTrigger(b, now, now) ?? Infinity)
+        (computeNextTrigger(a, now, appStart) ?? Infinity) -
+        (computeNextTrigger(b, now, appStart) ?? Infinity)
     )
 
   const fmtCountdown = (t: Task): string => {
-    const nt = computeNextTrigger(t, now, now)
+    if (paused && t.enabled) return '已暂停'
+    const nt = computeNextTrigger(t, now, appStart)
     if (nt === null) return '—'
     const s = Math.max(0, Math.round((nt - now) / 1000))
     const h = Math.floor(s / 3600)

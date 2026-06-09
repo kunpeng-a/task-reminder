@@ -48,6 +48,12 @@ export function TaskEdit({ id }: { id: string | null }): React.JSX.Element {
   const schedTime = t.scheduledTime ? t.scheduledTime.slice(11, 16) : '09:00'
   const setSched = (date: string, time: string): void => up({ scheduledTime: `${date}T${time}:00` })
 
+  // 音效：soundFile 可能是 null(用全局) / 内置 key / 自定义文件路径
+  const builtinKeys: string[] = BUILTIN_SOUNDS.map((b) => b.key)
+  const isCustomSound = t.soundFile != null && !builtinKeys.includes(t.soundFile)
+  const soundFileName = isCustomSound ? (t.soundFile as string).split(/[\\/]/).pop() : ''
+  const bgFileName = t.mask.backgroundImage ? t.mask.backgroundImage.split(/[\\/]/).pop() : ''
+
   const save = async (): Promise<void> => {
     if (!t.name.trim()) {
       alert('任务名称必填')
@@ -94,7 +100,13 @@ export function TaskEdit({ id }: { id: string | null }): React.JSX.Element {
                     <div
                       key={tp}
                       className={`seg-opt ${t.type === tp ? 'active' : ''}`}
-                      onClick={() => up({ type: tp })}
+                      onClick={() => {
+                        const patch: Partial<Task> = { type: tp }
+                        // 切到定时：把界面预填的日期/时间落库，避免「没动输入框 → scheduledTime 为空 → 永不触发」
+                        if (tp === 'scheduled' && !t.scheduledTime)
+                          patch.scheduledTime = `${schedDate}T${schedTime}:00`
+                        up(patch)
+                      }}
                     >
                       <b>{TYPE_TITLE[tp]}</b>
                       <span>{TYPE_DESC[tp]}</span>
@@ -109,7 +121,7 @@ export function TaskEdit({ id }: { id: string | null }): React.JSX.Element {
                   <div className="row-field">
                     <div className="rf-main">
                       <b>提醒间隔</b>
-                      <span>应用启动后开始计时</span>
+                      <span>启用后从满间隔开始计时，关闭再开会重新计时</span>
                     </div>
                     <div className="stepper">
                       <button onClick={() => up({ intervalMinutes: Math.max(1, (t.intervalMinutes ?? 1) - 1) })}>
@@ -220,33 +232,60 @@ export function TaskEdit({ id }: { id: string | null }): React.JSX.Element {
                 <div className="row-field">
                   <div className="rf-main">
                     <b>提醒音效</b>
+                    {isCustomSound && <span>自定义文件：{soundFileName}</span>}
                   </div>
-                  <select
-                    className="select"
-                    value={t.soundFile ?? ''}
-                    onChange={(e) => up({ soundFile: e.target.value || null })}
-                  >
-                    <option value="">（用全局默认）</option>
-                    {BUILTIN_SOUNDS.map((s) => (
-                      <option key={s.key} value={s.key}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <select
+                      className="select"
+                      style={{ width: 150 }}
+                      value={isCustomSound ? '__custom__' : (t.soundFile ?? '')}
+                      onChange={(e) => {
+                        if (e.target.value !== '__custom__') up({ soundFile: e.target.value || null })
+                      }}
+                    >
+                      <option value="">（用全局默认）</option>
+                      {BUILTIN_SOUNDS.map((s) => (
+                        <option key={s.key} value={s.key}>
+                          {s.label}
+                        </option>
+                      ))}
+                      {isCustomSound && <option value="__custom__">自定义文件</option>}
+                    </select>
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={async () => {
+                        const f = await api.pickFile('audio')
+                        if (f) up({ soundFile: f })
+                      }}
+                    >
+                      选择音频…
+                    </button>
+                  </div>
                 </div>
                 <div className="row-field">
                   <div className="rf-main">
                     <b>自定义背景壁纸</b>
+                    {t.mask.backgroundImage && <span>{bgFileName}</span>}
                   </div>
-                  <button
-                    className="btn btn-secondary btn-sm"
-                    onClick={async () => {
-                      const f = await api.pickFile('image')
-                      if (f) upMask({ backgroundImage: f })
-                    }}
-                  >
-                    选择图片…
-                  </button>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={async () => {
+                        const f = await api.pickFile('image')
+                        if (f) upMask({ backgroundImage: f })
+                      }}
+                    >
+                      选择图片…
+                    </button>
+                    {t.mask.backgroundImage && (
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => upMask({ backgroundImage: null })}
+                      >
+                        清除
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

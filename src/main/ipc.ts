@@ -31,6 +31,7 @@ export function registerIpc(getMainWindow: () => BrowserWindow | null): void {
     return scheduler.isPaused()
   })
   ipcMain.handle(IPC.isPaused, () => scheduler.isPaused())
+  ipcMain.handle(IPC.getAppStart, () => scheduler.getAppStart())
   ipcMain.handle(IPC.pickFile, async (_e, kind: 'image' | 'audio') => {
     const filters =
       kind === 'image'

@@ -9,6 +9,7 @@ export interface RendererApi {
   saveSettings(s: AppSettings): Promise<void>
   pauseAll(): Promise<boolean>
   isPaused(): Promise<boolean>
+  getAppStart(): Promise<number>
   pickFile(kind: 'image' | 'audio'): Promise<string | null>
   onTasksChanged(cb: () => void): () => void
   onMaskShow(cb: (payload: unknown) => void): () => void

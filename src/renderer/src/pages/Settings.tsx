@@ -26,6 +26,7 @@ export function Settings(): React.JSX.Element | null {
             <h1>全局设置</h1>
           </header>
           <div className="content">
+            <div className="set-wrap">
             <div className="card">
               <div className="card-title">遮罩默认</div>
               <div className="row-field">
@@ -106,13 +107,14 @@ export function Settings(): React.JSX.Element | null {
                   value={s.soundFile}
                   onChange={(e) => save({ ...s, soundFile: e.target.value })}
                 >
-                  {BUILTIN_SOUNDS.filter((b) => b.key !== 'silent').map((b) => (
+                  {BUILTIN_SOUNDS.map((b) => (
                     <option key={b.key} value={b.key}>
                       {b.label}
                     </option>
                   ))}
                 </select>
               </div>
+            </div>
             </div>
           </div>
         </section>

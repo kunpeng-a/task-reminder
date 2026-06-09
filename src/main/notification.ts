@@ -34,6 +34,14 @@ function isFullscreenBusy(): boolean {
 const queue: MaskPayload[] = []
 let maskWin: BrowserWindow | null = null
 let showing = false
+let activeTaskId: string | null = null
+let closingForSnooze = false
+
+// 主窗口取值器（用于遮罩关闭后通知列表刷新倒计时）
+let getMain: () => BrowserWindow | null = () => null
+export function setMainGetter(fn: () => BrowserWindow | null): void {
+  getMain = fn
+}
 
 function resolveSound(task: Task): string {
   const s = store.getSettings()
@@ -53,6 +61,8 @@ export function enqueue(task: Task): void {
   const s = store.getSettings()
   // 全屏逃生舱：独占全屏/演示/游戏时不强弹（自用工具简单处理：跳过本次）
   if (isFullscreenBusy()) return
+  // 同一任务正在提醒或已排队 → 不重复弹（提醒期间相当于暂停，等关闭后再重新计时）
+  if (activeTaskId === task.id || queue.some((p) => p.taskId === task.id)) return
   const payload: MaskPayload = {
     taskId: task.id,
     name: task.name,
@@ -72,9 +82,11 @@ function showNext(): void {
   const payload = queue.shift()
   if (!payload) {
     showing = false
+    activeTaskId = null
     return
   }
   showing = true
+  activeTaskId = payload.taskId
   const { width, height } = screen.getPrimaryDisplay().bounds
   maskWin = new BrowserWindow({
     x: 0,
@@ -88,7 +100,13 @@ function showNext(): void {
     fullscreen: true,
     resizable: false,
     movable: false,
-    webPreferences: { preload: join(__dirname, '../preload/index.js') }
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      // autoplayPolicy：允许遮罩无用户手势直接播放提示音（否则被 Chromium 拦截）
+      autoplayPolicy: 'no-user-gesture-required',
+      // webSecurity:false：允许遮罩加载本地 file:// 壁纸/音效（自用本地应用）
+      webSecurity: false
+    }
   })
   maskWin.setAlwaysOnTop(true, 'screen-saver')
   const url = process.env['ELECTRON_RENDERER_URL']
@@ -96,9 +114,23 @@ function showNext(): void {
   else maskWin.loadFile(join(__dirname, '../renderer/index.html'), { hash: 'mask' })
   maskWin.webContents.once('did-finish-load', () => {
     maskWin?.webContents.send(IPC.maskShow, payload)
+    maskWin?.show()
+    maskWin?.focus()
   })
   maskWin.on('closed', () => {
+    const closedId = activeTaskId
     maskWin = null
+    activeTaskId = null
+    // 遮罩结束（知道了/自动关闭）：把该 interval 任务的计时锚点重置到“现在”，
+    // 即“关闭后才重新开始计时”。snooze 关闭不重置（由 5 分钟重弹处理）。
+    if (closedId && !closingForSnooze) {
+      const t = store.listTasks().find((x) => x.id === closedId)
+      if (t && t.type === 'interval') {
+        store.setLastTriggered(closedId, new Date().toISOString())
+        getMain()?.webContents.send(IPC.tasksChanged) // 让列表重算倒计时
+      }
+    }
+    closingForSnooze = false
     showNext() // 关闭后出下一个
   })
 }
@@ -110,5 +142,6 @@ export function closeMask(): void {
 
 /** 遮罩内 snooze：关闭当前，由 ipc 调用 scheduler.snooze 处理 5 分钟重弹 */
 export function closeForSnooze(): void {
+  closingForSnooze = true
   maskWin?.close()
 }
