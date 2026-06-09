@@ -1,5 +1,8 @@
 .gspowers/
 
+# 本地开发用，不公开
+CLAUDE.md
+
 # electron-vite scaffold
 node_modules
 dist

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, powerMonitor } from 'electron'
 import { electronApp } from '@electron-toolkit/utils'
 import { join } from 'node:path'
+import appIcon from '../../resources/icon.png?asset'
 import { registerIpc } from './ipc'
 import * as scheduler from './scheduler'
 import * as notification from './notification'
@@ -43,6 +44,7 @@ function createMainWindow(): void {
     height: 760,
     show: false,
     autoHideMenuBar: true,
+    icon: appIcon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
