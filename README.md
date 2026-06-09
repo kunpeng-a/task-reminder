@@ -1,6 +1,8 @@
-# scaffold-tmp
+# 任务提醒 · Task Reminder
 
-An Electron application with React and TypeScript
+常驻系统托盘、后台持续计时的桌面提醒应用（作者自用版）。Electron + React + TypeScript + Vite + electron-store。
+
+三类提醒（周期 / 定时 / 每日）+ 全屏遮罩提醒（倒计时进度条、提示音、自定义壁纸）+ 开机自启 + 单实例锁。需求见 `PRD.md`，开发指引见 `CLAUDE.md`，更新日志见 `CHANGELOG.md`。
 
 ## Recommended IDE Setup
 
